@@ -1,7 +1,7 @@
-# es6-express-api
+# quizz-prep
 
-ES6 API Boilerplate based on Express, Starter kit for any Express-based API / Website project
+(Architecture based on es6-express-api)
 
-In the FRONT/ directory, you will find the same folders that are created by the express-generator
-In the API/ directory, you will find your controllers, models, routes and helpers. This design is made to efficiently use the Express Middlewares.
+Petit aplication web de quizz pour vérifier les connaissances des prep'ETNA en piscine ou au cours de l'année 
+
 

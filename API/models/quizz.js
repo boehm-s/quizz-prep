@@ -23,7 +23,8 @@ var QuizzSchema = new Schema({
 	type: String,
 	required: true
     },
-    quizz: [QuestionSchema]
+    quizz: [QuestionSchema],
+    state: String
 });
 
 var quizzModel = mongoose.model('Quizz', QuizzSchema);

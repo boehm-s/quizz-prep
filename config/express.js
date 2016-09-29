@@ -6,9 +6,14 @@ import path from 'path';
 
 const app = express();
 
-const frontRoot = __dirname + '/../../FRONT/';
 const apiRoot = './API/'; // api inside build
 
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -16,21 +21,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.set('views', path.join(frontRoot, 'views'));
-
+app.set('views', path.join(__dirname, '../FRONT/views/'));
 
 // view engine setup
 app.set('view engine', 'jade');
 
-// sass setup
-app.use(require('node-sass-middleware')({
-    src: path.join(frontRoot, 'public'),
-    dest: path.join(frontRoot, 'public'),
-    indentedSyntax: true,
-    sourceMap: true
-}));
-
 // public directory
-app.use(express.static(path.join(frontRoot, 'public')));
+app.use(express.static(path.join(__dirname, '../FRONT/public')));
 
 export default app;

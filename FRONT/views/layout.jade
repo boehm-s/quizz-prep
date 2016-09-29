@@ -2,6 +2,12 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='/css/lib/bootstrap.min.css')
     link(rel='stylesheet', href='/css/style.css')
-  body
-    block content
+    block head
+  body.container-fluid
+    block body
+    script(src="/js/lib/rx.js")
+    script(src="/js/common.js")
+    block scripts
+    

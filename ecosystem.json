@@ -3,7 +3,7 @@
     "name"            : "es6-express-api",
     "script"          : "./app.js",
     "merge_logs"      : true,
-    "cwd"             : "/home/boehm-s/Documents/es6-express-api/",
+    "cwd"             : "/home/boehm-s/Documents/quizz-prep/",
     "node_args"       : "--harmony",
     "exec_interpreter" : "babel-node",
     "exec_mode"       : "fork_mode",

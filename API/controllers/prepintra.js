@@ -27,8 +27,12 @@ function connexion(req, res, next) {
     request(options, (err, response, body) => {
 	if (err)
 	    res.status(418).json({success: false, error: err, message: "Don't foute you de ma gueule"});
-	else if (response.statusCode === 200)
-	    res.status(200).json({success: true, message: "Authentication succeeded", data: response, cookie: response.headers["set-cookie"]});
+	else if (response.statusCode === 200) {
+	    req.user = auth.login;
+	    req.cookie = response.headers["set-cookie"];
+	    req.jsonFromConnexion = {success: true, message: "Authentication succeeded", data: response, cookie: response.headers["set-cookie"]};
+	    next();
+	}
 	else
 	    res.status(401).json({success: false, message: "Wrong login/password combination"});
     });
@@ -37,3 +41,13 @@ function connexion(req, res, next) {
 
 
 export default {connexion};
+
+
+
+
+
+
+
+
+
+

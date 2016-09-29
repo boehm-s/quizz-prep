@@ -1,13 +1,16 @@
 import http from 'http';
 import app from './config/express';
+import mongoose from 'mongoose';
+
 import serverConf from './config/server';
 import routes from './FRONT/routes/index';
 import apiRoutes from './API/routes/index';
 
 
-const debug = require('debug')('es6-express-api:server');
+const debug  = require('debug')('es6-express-api:server');
 const server = http.createServer(app);
-const port = serverConf.normalizePort(process.env.PORT || '3000');
+const port   = serverConf.normalizePort(process.env.PORT || '3000');
+const db     = mongoose.connect('mongodb://localhost:27017/quizzPrep'); 
 
 app.set('port', port);
 

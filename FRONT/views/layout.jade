@@ -5,8 +5,10 @@ html
     link(rel='stylesheet', href='/css/lib/bootstrap.min.css')
     link(rel='stylesheet', href='/css/style.css')
     block head
-  body.container-fluid
-    block body
+  body
+    .container-fluid
+      block body
+    #transitionTrick
     script(src="/js/lib/rx.js")
     script(src="/js/common.js")
     block scripts

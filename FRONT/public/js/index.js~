@@ -1,5 +1,0 @@
-var submitButton = document.getElementById('submit');
-
-submitButton.onclick = function() {
-    console.log('coucou');
-};

@@ -6,6 +6,9 @@ var xhr = getXHR();
 
 connexionForm.onsubmit = function(e) {
     e.preventDefault();
+
+    transitionTrick1();
+    
     xhr.open("POST", API.url+'/prepintra/connexion');
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send("login="+login.value+"&password="+password.value);	
@@ -13,7 +16,11 @@ connexionForm.onsubmit = function(e) {
     xhr.onreadystatechange = function() {
 	if (xhr.readyState == 4 ) {
 	    console.log(xhr.status);
-	    console.log(JSON.parse(xhr.response));
+	    if (xhr.status === 200) {
+		transitionTrick2(Site.url+'/quizz', "Authentication successful !");
+	    } else {
+		transitionTrick2(Site.url, "Authentication failed !");
+	    }
 	}
     };    
     return false;

@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 
 import serverConf from './config/server';
 import routes from './FRONT/routes/index';
+import adminRoutes from './FRONT/routes/admin';
+// api
 import apiRoutes from './API/routes/index';
 
 
@@ -16,6 +18,7 @@ app.set('port', port);
 
 // mount routes
 app.use('/', routes);
+app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);
 
 server.listen(port);

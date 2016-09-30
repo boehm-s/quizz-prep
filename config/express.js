@@ -6,7 +6,7 @@ import path from 'path';
 
 const app = express();
 
-const apiRoot = './API/'; // api inside build
+const apiRoot = './API/';
 
 
 app.use((req, res, next) => {
@@ -29,4 +29,17 @@ app.set('view engine', 'jade');
 // public directory
 app.use(express.static(path.join(__dirname, '../FRONT/public')));
 
+
+app.set('superSecret', "testPhrase");
+
 export default app;
+
+
+
+
+
+
+
+
+
+

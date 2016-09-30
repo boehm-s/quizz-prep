@@ -1,9 +1,0 @@
-extends layout
-
-block head
-  link(rel='stylesheet', href='/css/index.css')
-block body
-  header.row
-    h1.col-xs-12= title
-block scripts
-  script(src='/js/quizz.js')

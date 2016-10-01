@@ -11,7 +11,7 @@ block body
         input.form-control(type='text', placeholder='Rechercher')
       ul
         li.add.navbar-item
-          p Add Quizz !
+          p add Quizz !
         li.waiting.navbar-item
           p Waiting Quizzs ...
         li.todo.navbar-item

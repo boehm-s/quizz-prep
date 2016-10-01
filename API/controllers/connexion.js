@@ -139,6 +139,8 @@ function isAdmin(req, res, next) {
     var token = req.headers['x-access-token'] || req.body.token || req.query.token;
     if (token) {
 	jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+	    decoded = (decoded.profile) ? decoded : decoded._doc;
+	    console.log(decoded);
 	    if (err) {
 		res.json({ success: false, message: 'Failed to authenticate token.' });
 	    } else {

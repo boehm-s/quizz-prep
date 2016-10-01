@@ -17,6 +17,7 @@ connexionForm.onsubmit = function(e) {
 	if (xhr.readyState == 4 ) {
 	    console.log(xhr.status);
 	    if (xhr.status === 200) {
+		localStorage.setItem('token', JSON.parse(xhr.responseText).token);
 		transitionTrick2(Site.url+'/admin/quizz', "Authentication successful !");
 	    } else {
 		transitionTrick2(Site.url+'/admin', "Authentication failed !");

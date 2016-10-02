@@ -2,7 +2,7 @@ import Quizz from '../models/quizz';
 import app from '../../config/express';
 
 function add(req, res, next) {
-    const quizz = new Quizz();
+    // const quizz = new Quizz(); ???
 
     quizz = JSON.parse(req.body.quizz);
     quizz.state = 'waiting';
@@ -76,7 +76,7 @@ function getAll(req, res, next) {
 }
 
 function getByState(req, res, next) {
-    const state = state = req.state || req.query.state;
+    const state = req.state || req.query.state;
     Quizz.find({state: state}, (err, quizzs) => {
 		if (err) {
 			res.status(418).json({

@@ -9,7 +9,7 @@ connexionForm.onsubmit = function(e) {
 
     transitionTrick1();
     
-    xhr.open("POST", API.url+'/connexion');
+    xhr.open("POST", API.url+'/login');
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send("login="+login.value+"&password="+password.value);	
 

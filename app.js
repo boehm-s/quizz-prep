@@ -12,7 +12,7 @@ import apiRoutes from './API/routes/index';
 const debug  = require('debug')('es6-express-api:server');
 const server = http.createServer(app);
 const port   = serverConf.normalizePort(process.env.PORT || '3000');
-const db     = mongoose.connect('mongodb://localhost:27017/quizzPrep'); 
+const db     = mongoose.connect(process.env.PREPQUIZZ_MONGO || 'mongodb://localhost:27017/quizzPrep'); 
 
 app.set('port', port);
 

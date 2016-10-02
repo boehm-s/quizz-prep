@@ -1,5 +1,4 @@
 import express from 'express';
-import exampleRoutes from './example';
 import connectionRoutes from './connection';
 import quizzRoutes from './quizz';
 

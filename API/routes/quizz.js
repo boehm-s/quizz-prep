@@ -1,63 +1,45 @@
 import express from 'express';
 import quizzCtrl from './../controllers/quizz';
-import connexionCtrl from './../controllers/connexion';
+import connectionCtrl from './../controllers/connection';
 
 const router = express.Router();
 
 router.route('/').get(
-    connexionCtrl.isAdmin,
+    connectionCtrl.isAdmin,
     quizzCtrl.getAll
 );
 
 router.route('/waiting').get(
     (req, res, next) => { req.state = 'waiting'; },
-    connexionCtrl.isAdmin,
+    connectionCtrl.isAdmin,
     quizzCtrl.getByState
 );
 
 router.route('/todo').get(
     (req, res, next) => { req.state = 'todo'; },
-    connexionCtrl.isConnected,
+    connectionCtrl.isConnected,
     quizzCtrl.getByState
 );
 
 router.route('/done').get(
     (req, res, next) => { req.state = 'done'; },
-    connexionCtrl.isAdmin,
+    connectionCtrl.isAdmin,
     quizzCtrl.getByState
 );
 
 router.route('/add').post(
-    connexionCtrl.isAdmin,
+    connectionCtrl.isAdmin,
     quizzCtrl.add
 );
 
 router.route('/update').post(
-    connexionCtrl.isAdmin,
+    connectionCtrl.isAdmin,
     quizzCtrl.update
 );
 
 router.route('/delete').post(
-    connexionCtrl.isAdmin,
+    connectionCtrl.isAdmin,
     quizzCtrl.remove
 );
 
 export default router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

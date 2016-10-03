@@ -9,7 +9,7 @@
     ]
   },
   "scripts": {
-    "dev": "babel-node app.js",
+    "dev": "babel-watch app.js",
     "start": "pm2 start ecosystem.json",
     "//": "build   babel -d ./build/config ./config && babel -d ./build/API ./API && babel -d ./build ./app.js"
   },

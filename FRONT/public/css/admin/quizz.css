@@ -59,3 +59,39 @@ nav > ul > li.navbar-item:hover {
 nav > ul > li.navbar-item > p {
   margin: 0;
 }
+
+
+/* ADD QUIZZ */
+
+#add-quizz {
+  margin: 10px;
+  margin-top: 50px;
+  width: 50%;
+  margin-left: 25%;
+}
+
+#add-quizz h3 {
+  text-align: center;
+}
+
+#question-container {
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.proposition-container > div {
+  padding: 0;
+}
+
+#add-quizz .btn.btn-danger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proposition-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}

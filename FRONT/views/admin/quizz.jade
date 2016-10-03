@@ -10,17 +10,33 @@ block body
       form.form-inline.pull-xs-right
         input.form-control(type='text', placeholder='Rechercher')
       ul
-        li.add.navbar-item
+       li.add-quizz.navbar-item
           p Add Quizz !
-        li.waiting.navbar-item
+       li.waiting.navbar-item
           p Waiting Quizzs ...
-        li.todo.navbar-item
+       li.todo.navbar-item
           p Todo Quizzs
-        li.done.navbar-item
+       li.done.navbar-item
           p Done Quizzs
     section#display.col-xs-10
       header.row
         h1.col-xs-12= title
-
+      section#add-quizz.row
+        input.col-xs-12.form-control(type='text', placeholder='Quizz Name')
+        .col-xs-12
+          h3 Questions : 
+        #previous-question.col-xs-1
+        #question-container.col-xs-10
+          .question
+            input.form-control(type='text', placeholder='Question')
+            input.form-control(type='text', placeholder='Image URL')
+            .image.col-xs-12
+            .proposition-container
+              .col-xs-10
+                input.form-control.proposition(type='text', placeholder='proposition')
+              .col-xs-2
+                button.btn.btn-block.add add
+              .col-xs-12.proposition-list
+        #next-question.col-xs-1
 block scripts
   script(src='/js/admin/quizz.js')

@@ -25,12 +25,3 @@ connexionForm.onsubmit = function(e) {
     };    
     return false;
 };
-
-
-
-
-
-
-
-
-

@@ -25,7 +25,7 @@ block body
         input.col-xs-12.form-control(type='text', placeholder='Quizz Name')
         .col-xs-12
           h3 Questions : 
-        #previous-question.col-xs-1
+        #previous-question.col-xs-1 <
         #question-container.col-xs-10
           .question
             input.form-control(type='text', placeholder='Question')
@@ -37,6 +37,7 @@ block body
               .col-xs-2
                 button.btn.btn-block.add add
               .col-xs-12.proposition-list
-        #next-question.col-xs-1
+        #next-question.col-xs-1 >
+        #question-counter 1 / 1
 block scripts
   script(src='/js/admin/quizz.js')

@@ -95,3 +95,14 @@ nav > ul > li.navbar-item > p {
   justify-content: center;
   margin-top: 20px;
 }
+
+#previous-question, #next-question {
+  height: 100%;
+  padding: 20px;
+  background: #DDD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  cursor: pointer;
+}

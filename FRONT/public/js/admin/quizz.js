@@ -1,4 +1,4 @@
-const quizz = {
+const quizz = {    
     refreshEvents: () => {
 	let buttons = document.getElementsByClassName('add');
 
@@ -52,7 +52,21 @@ const quizz = {
     },
 
     addQuestion: () => {
-	
+	let container = document.getElementById("tmp-question");
+	container.innerHTML+= '<div class="question"><input type="text" placeholder="Question" class="form-control"><input type="text" placeholder="Image URL" class="form-control"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="form-control proposition"></div><div class="col-xs-2"><button class="btn btn-block add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
+	container.style.width =  Array.from(document.getElementsByClassName('question')).length*100 +"%";
+	quizz.refreshEvents();
+    },
+
+    nextQuestion: () => {
+	let container = document.getElementById("tmp-question");
+	let newMarginLeft = parseInt(
+	    document.getElementById('tmp-question')
+		.getAttribute('style')
+		.split(';')[1]
+		.split(':')[1]
+	) - 100; // a corriger
+	container.style.marginLeft = newMarginLeft + "px";
     }
 
 };

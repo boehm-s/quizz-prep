@@ -27,16 +27,17 @@ block body
           h3 Questions : 
         #previous-question.col-xs-1 <
         #question-container.col-xs-10
-          .question
-            input.form-control(type='text', placeholder='Question')
-            input.form-control(type='text', placeholder='Image URL')
-            .image.col-xs-12
-            .proposition-container
-              .col-xs-10
-                input.form-control.proposition(type='text', placeholder='proposition')
-              .col-xs-2
-                button.btn.btn-block.add add
-              .col-xs-12.proposition-list
+          #tmp-question
+            .question
+              input.form-control(type='text', placeholder='Question')
+              input.form-control(type='text', placeholder='Image URL')
+              .image.col-xs-12
+              .row.proposition-container
+                .col-xs-10
+                  input.form-control.proposition(type='text', placeholder='proposition')
+                .col-xs-2
+                  button.btn.btn-block.add add
+                .col-xs-12.proposition-list
         #next-question.col-xs-1 >
         #question-counter 1 / 1
 block scripts

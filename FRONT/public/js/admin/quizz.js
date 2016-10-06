@@ -7,6 +7,37 @@ const quizz = {
 	    elem.removeEventListener('click', quizz.addProposition);
 	    elem.addEventListener('click', quizz.addProposition);
 	});
+
+	let nextQuestionButton = document.getElementById('next-question');
+	let previousQuestionButton = document.getElementById('previous-question');
+
+	previousQuestionButton.onclick = () => {
+	    let container = document.getElementById('tmp-question');
+	    let containerMarginLeft = (container.getAttribute('style') === null) ? 0 : parseInt(container.getAttribute('style').split(';')[1].split(':')[1]);
+	    ((containerMarginLeft + 100 > 0) ? console.log("There is no previous question") : quizz.previousQuestion());
+	    let nextQuestionButton = document.getElementById('next-question');
+	    nextQuestionButton.innerHTML = '>';
+	};
+	nextQuestionButton.onclick = () => {
+	    let container = document.getElementById('tmp-question');
+	    let containerMarginLeft = (container.getAttribute('style') === null) ? 0 : parseInt(container.getAttribute('style').split(';')[1].split(':')[1]) || 0;
+	    let nextQuestionButton = document.getElementById('next-question');
+
+	    console.log("margin-left : ", containerMarginLeft);
+	    if (containerMarginLeft === 0 ||
+		Math.abs(parseInt(container.getAttribute('style').match(/margin\-left.*([0-9]*)/g)[0].split(':')[1]))
+		=== Math.abs((document.getElementsByClassName('question').length - 1)*100)) {
+		quizz.addQuestion();
+		quizz.nextQuestion();
+	    } else if (Math.abs(parseInt(container.getAttribute('style').match(/margin\-left.*([0-9]*)/g)[0].split(':')[1])) === Math.abs((document.getElementsByClassName('question').length - 2)*100)) {
+		nextQuestionButton.innerHTML = '+';
+		quizz.nextQuestion();
+	    }else {
+		quizz.nextQuestion();
+	    }
+	    
+	    
+	};
     },
 
     addProposition: event => {
@@ -61,12 +92,23 @@ const quizz = {
     nextQuestion: () => {
 	let container = document.getElementById("tmp-question");
 	let newMarginLeft = parseInt(
-	    document.getElementById('tmp-question')
+	    container
 		.getAttribute('style')
 		.split(';')[1]
 		.split(':')[1]
-	) - 100; // a corriger
-	container.style.marginLeft = newMarginLeft + "px";
+	) - 100 || -100; 
+	container.style.marginLeft = newMarginLeft + "%";
+    },
+
+    previousQuestion: () => {
+	let container = document.getElementById("tmp-question");
+	let newMarginLeft = parseInt(
+	    container
+		.getAttribute('style')
+		.split(';')[1]
+		.split(':')[1]
+	) + 100 || 0; 
+	container.style.marginLeft = newMarginLeft + "%";
     }
 
 };

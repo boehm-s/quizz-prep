@@ -22,21 +22,21 @@ block body
       header.row
         h1.col-xs-12= title
       section#add-quizz.row
-        input.col-xs-12.form-control(type='text', placeholder='Quizz Name')
+        input#quizz-name.col-xs-12(type='text', placeholder='Quizz Name')
         .col-xs-12
           h3 Questions : 
         #previous-question.col-xs-1 <
         #question-container.col-xs-10
           #tmp-question
             .question
-              input.form-control(type='text', placeholder='Question')
-              input.form-control(type='text', placeholder='Image URL')
+              input.col-xs-12(type='text', placeholder='Question')
+              input.col-xs-12(type='text', placeholder='Image URL')
               .image.col-xs-12
               .row.proposition-container
                 .col-xs-10
-                  input.form-control.proposition(type='text', placeholder='proposition')
+                  input.col-xs-12.proposition(type='text', placeholder='proposition')
                 .col-xs-2
-                  button.btn.btn-block.add add
+                  button.btn.add add
                 .col-xs-12.proposition-list
         #next-question.col-xs-1 +
         #question-counter 1 / 1

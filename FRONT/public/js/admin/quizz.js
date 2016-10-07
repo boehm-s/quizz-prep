@@ -1,4 +1,31 @@
 const quizz = {    
+    helpers: {
+    },
+
+    DOM: {
+	container: document.getElementById('tmp-question'),
+
+	nextQuestion: document.getElementById('next-question'),
+
+	previousQuestion: document.getElementById('previous-question'),
+
+	questionCounter: document.getElementById('question-counter'),
+	
+	getQuestions : () => document.getElementsByClassName('question'),
+	
+	getMarginLeftStyleAttr : node => {
+	    let marginLeftAttr = (node.getAttribute('style') === null)
+		    ? false
+		    : node.getAttribute('style').match(/margin\-left.*([0-9]*)/g)[0];
+	    if (!marginLeftAttr) {
+		console.log(node, "This node has no margin-left in his style attribute");
+		return false;
+	    } else {
+		return parseInt(marginLeftAttr.split(':')[1]);
+	    }
+	}
+    },
+       
     refreshEvents: () => {
 	let buttons = document.getElementsByClassName('add');
 
@@ -8,31 +35,29 @@ const quizz = {
 	    elem.addEventListener('click', quizz.addProposition);
 	});
 
-	let nextQuestionButton = document.getElementById('next-question');
-	let previousQuestionButton = document.getElementById('previous-question');
-
-	previousQuestionButton.onclick = () => {
-	    let container = document.getElementById('tmp-question');
-	    let containerMarginLeft = (container.getAttribute('style') === null) ? 0 : parseInt(container.getAttribute('style').split(';')[1].split(':')[1]);
-	    ((containerMarginLeft + 100 > 0) ? console.log("There is no previous question") : quizz.previousQuestion());
-	    let nextQuestionButton = document.getElementById('next-question');
-	    nextQuestionButton.innerHTML = '>';
+	quizz.DOM.previousQuestion.onclick = () => {
+	    let containerML = quizz.DOM.getMarginLeftStyleAttr(quizz.DOM.container);
+	    
+	    ((containerML + 100 > 0)
+	     ? console.log("There is no previous question")
+	     : quizz.previousQuestion());
+	    
+	    quizz.DOM.nextQuestion.innerHTML = '>';
 	};
-	nextQuestionButton.onclick = () => {
-	    let container = document.getElementById('tmp-question');
-	    let containerMarginLeft = (container.getAttribute('style') === null) ? 0 : parseInt(container.getAttribute('style').split(';')[1].split(':')[1]) || 0;
-	    let nextQuestionButton = document.getElementById('next-question');
+	quizz.DOM.nextQuestion.onclick = () => {
+	    let nextQuestionButton = quizz.DOM.nextQuestion;
+	    let containerML = quizz.DOM.getMarginLeftStyleAttr(quizz.DOM.container);
+	    let questions = quizz.DOM.getQuestions();
+	    
+	    console.log("margin-left : ", containerML);
 
-	    console.log("margin-left : ", containerMarginLeft);
-	    if (containerMarginLeft === 0 ||
-		Math.abs(parseInt(container.getAttribute('style').match(/margin\-left.*([0-9]*)/g)[0].split(':')[1]))
-		=== Math.abs((document.getElementsByClassName('question').length - 1)*100)) {
+	    if (!containerML || Math.abs(containerML) === Math.abs((questions.length - 1) * 100)) {
 		quizz.addQuestion();
 		quizz.nextQuestion();
-	    } else if (Math.abs(parseInt(container.getAttribute('style').match(/margin\-left.*([0-9]*)/g)[0].split(':')[1])) === Math.abs((document.getElementsByClassName('question').length - 2)*100)) {
+	    } else if (Math.abs(containerML) === Math.abs((questions.length - 2)*100)) {
 		nextQuestionButton.innerHTML = '+';
 		quizz.nextQuestion();
-	    }else {
+	    } else {
 		quizz.nextQuestion();
 	    }
 	    
@@ -83,32 +108,29 @@ const quizz = {
     },
 
     addQuestion: () => {
-	let container = document.getElementById("tmp-question");
-	container.innerHTML+= '<div class="question"><input type="text" placeholder="Question" class="form-control"><input type="text" placeholder="Image URL" class="form-control"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="form-control proposition"></div><div class="col-xs-2"><button class="btn btn-block add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
-	container.style.width =  Array.from(document.getElementsByClassName('question')).length*100 +"%";
+	quizz.DOM.container.innerHTML+= '<div class="question"><input type="text" placeholder="Question" class="col-xs-12"><input type="text" placeholder="Image URL" class="col-xs-12"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="col-xs-12 proposition"></div><div class="col-xs-2"><button class="btn add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
+	quizz.DOM.container.style.width =  Array.from(document.getElementsByClassName('question')).length*100 +"%";
 	quizz.refreshEvents();
     },
 
     nextQuestion: () => {
-	let container = document.getElementById("tmp-question");
 	let newMarginLeft = parseInt(
-	    container
+	    quizz.DOM.container
 		.getAttribute('style')
 		.split(';')[1]
 		.split(':')[1]
 	) - 100 || -100; 
-	container.style.marginLeft = newMarginLeft + "%";
+	quizz.DOM.container.style.marginLeft = newMarginLeft + "%";
     },
 
     previousQuestion: () => {
-	let container = document.getElementById("tmp-question");
 	let newMarginLeft = parseInt(
-	    container
+	    quizz.DOM.container
 		.getAttribute('style')
 		.split(';')[1]
 		.split(':')[1]
 	) + 100 || 0; 
-	container.style.marginLeft = newMarginLeft + "%";
+	quizz.DOM.container.style.marginLeft = newMarginLeft + "%";
     }
 
 };

@@ -72,7 +72,6 @@ const quizz = {
 	let propositionList = document.getElementsByClassName('proposition-list')[index];
 	propositionList.innerHTML+= '<div class="col-xs-5"><button class="btn btn-secondary proposition-button">' + proposition + '</button><button class="col-xs-1 btn btn-danger" onclick="quizz.removeProposition(this)">X</button></div>';
 
-	
 	let propositionButtons = document.getElementsByClassName('proposition-button');
 
 	Array.from(propositionButtons).forEach((elem, index) => {

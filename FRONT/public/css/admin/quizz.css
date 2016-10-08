@@ -1,3 +1,12 @@
+/* --- Override bootstrap --- */
+.proposition-button.btn-success {
+  color: #fff;
+  background-color: #449d44;
+  border-color: #398439;
+}
+
+/* -------------------------- */
+
 header {
   margin-top: 0 !important;
   background: #80cbc4;

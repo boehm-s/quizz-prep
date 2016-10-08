@@ -53,8 +53,6 @@ const quizz = {
 	    let containerML = quizz.DOM.getMarginLeftStyleAttr(quizz.DOM.container);
 	    let questions = quizz.DOM.getQuestions();
 	    
-	    console.log("margin-left : ", containerML);
-
 	    if ((!containerML && quizz.currentQuestion === quizz.maxQuestion) || (Math.abs(containerML) === Math.abs((questions.length - 1) * 100) && quizz.currentQuestion === quizz.maxQuestion)) {
 		quizz.addQuestion();
 		quizz.nextQuestion();
@@ -76,14 +74,13 @@ const quizz = {
 	let propositionList = document.getElementsByClassName('proposition-list')[index];
 	propositionList.innerHTML+= '<div class="col-xs-5"><button class="btn btn-secondary proposition-button">' + proposition + '</button><button class="col-xs-1 btn btn-danger" onclick="quizz.removeProposition(this)">X</button></div>';
 
-	let propositionButtons = document.getElementsByClassName('proposition-button');
+	let propositionButtons = document.getElementsByClassName('question')[index].getElementsByClassName('proposition-button');
 
 	Array.from(propositionButtons).forEach((elem, index) => {
-	    elem.dataset.index = index;
+	    elem.dataset.index = index; 
 	    elem.removeEventListener('click', quizz.validProposition);
 	    elem.addEventListener('click', quizz.validProposition);
 	});
-	console.log("done");
     },
 
     validProposition: event => {

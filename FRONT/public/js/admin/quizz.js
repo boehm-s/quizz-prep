@@ -26,6 +26,10 @@ const quizz = {
 	}
     },
        
+    maxQuestion : 1,
+    
+    currentQuestion: 1,
+
     refreshEvents: () => {
 	let buttons = document.getElementsByClassName('add');
 
@@ -51,7 +55,7 @@ const quizz = {
 	    
 	    console.log("margin-left : ", containerML);
 
-	    if (!containerML || Math.abs(containerML) === Math.abs((questions.length - 1) * 100)) {
+	    if ((!containerML && quizz.currentQuestion === quizz.maxQuestion) || (Math.abs(containerML) === Math.abs((questions.length - 1) * 100) && quizz.currentQuestion === quizz.maxQuestion)) {
 		quizz.addQuestion();
 		quizz.nextQuestion();
 	    } else if (Math.abs(containerML) === Math.abs((questions.length - 2)*100)) {
@@ -121,6 +125,9 @@ const quizz = {
 		.split(':')[1]
 	) - 100 || -100; 
 	quizz.DOM.container.style.marginLeft = newMarginLeft + "%";
+	quizz.maxQuestion+= (quizz.maxQuestion === quizz.currentQuestion) ? 1 : 0;
+	quizz.currentQuestion++;
+	quizz.DOM.questionCounter.innerHTML = quizz.currentQuestion + ' / ' + quizz.maxQuestion;
     },
 
     previousQuestion: () => {
@@ -131,6 +138,8 @@ const quizz = {
 		.split(':')[1]
 	) + 100 || 0; 
 	quizz.DOM.container.style.marginLeft = newMarginLeft + "%";
+	quizz.currentQuestion--;
+	quizz.DOM.questionCounter.innerHTML = quizz.currentQuestion + ' / ' + quizz.maxQuestion;
     }
 
 };

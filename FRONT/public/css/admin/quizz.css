@@ -1,5 +1,4 @@
 header {
-  
   margin-top: 0 !important;
   background: #80cbc4;
 }
@@ -115,6 +114,13 @@ nav > ul > li.navbar-item > p {
   justify-content: center;
 }
 
+.proposition-list {
+  height: 320px;
+  overflow-y: scroll;
+  margin-top: 25px;
+  padding-bottom: 40px;
+}
+
 .proposition-list > div {
   display: flex;
   align-items: center;
@@ -190,3 +196,52 @@ input[type="text"] {
   color: #aab9c0;
 }
 
+.proposition-button {
+  display: flex;
+  width: 100%;
+  max-height: 100px;
+  white-space: normal;
+  overflow: auto;
+}
+
+.proposition-button + .btn-danger {
+  width: 50px;
+}
+
+/*
+ * scrollbar for chrome
+ */
+
+.question ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.question ::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+.question ::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+.question ::-webkit-scrollbar-thumb:hover {
+  background: #273238;
+}
+.question ::-webkit-scrollbar-thumb:active {
+  background: #273238;
+}
+.question ::-webkit-scrollbar-track {
+  background: #aab9c0
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+.question ::-webkit-scrollbar-track:hover {
+  background: transparent;
+}
+.question ::-webkit-scrollbar-track:active {
+  background: transparent;
+}
+.question ::-webkit-scrollbar-corner {
+  background: transparent;
+}

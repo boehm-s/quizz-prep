@@ -1,3 +1,5 @@
+// PB : Creating a new question erase the other questions data
+
 const quizz = {    
     helpers: {
     },

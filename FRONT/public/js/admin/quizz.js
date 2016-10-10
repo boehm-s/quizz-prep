@@ -10,6 +10,8 @@ const quizz = {
 	previousQuestion: document.getElementById('previous-question'),
 
 	questionCounter: document.getElementById('question-counter'),
+
+	title: document.getElementById('quizz-name'),
 	
 	getQuestions : () => document.getElementsByClassName('question'),
 	
@@ -22,6 +24,17 @@ const quizz = {
 		return false;
 	    } else {
 		return parseInt(marginLeftAttr.split(':')[1]);
+	    }
+	},
+	getWidthStyleAttr: node => {
+	    let widthAttr = (node.getAttribute('style') === null)
+		    ? false
+		    : node.getAttribute('style').match(/width.*([0-9]*)/g)[0];
+	    if (!widthAttr) {
+		console.log(node, "This node has no width in his style attribute");
+		return false;
+	    } else {
+		return parseInt(widthAttr.split(':')[1]);
 	    }
 	}
     },
@@ -37,6 +50,13 @@ const quizz = {
 	    elem.dataset.index = index;
 	    elem.removeEventListener('click', quizz.addProposition);
 	    elem.addEventListener('click', quizz.addProposition);
+	});
+
+	let propositionButtons = document.getElementsByClassName('proposition-button');
+
+	Array.from(propositionButtons).forEach(elem => {
+	    elem.removeEventListener('click', quizz.validProposition);
+	    elem.addEventListener('click', quizz.validProposition);
 	});
 
 	quizz.DOM.previousQuestion.onclick = () => {
@@ -108,11 +128,27 @@ const quizz = {
     },
 
     addQuestion: () => {
-	quizz.DOM.container.innerHTML+= '<div class="question"><input type="text" placeholder="Question" class="col-xs-12"><input type="text" placeholder="Image URL" class="col-xs-12"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="col-xs-12 proposition"></div><div class="col-xs-2"><button class="btn add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
+	quizz.DOM.container.innerHTML+= '<div class="question"><button class="close-button" onclick="quizz.removeQuestion(this)">x</button><input type="text" placeholder="Question" class="col-xs-12"><input type="text" placeholder="Image URL" class="col-xs-12"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="col-xs-12 proposition"></div><div class="col-xs-2"><button class="btn add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
 	quizz.DOM.container.style.width =  Array.from(document.getElementsByClassName('question')).length*100 +"%";
 	quizz.refreshEvents();
     },
 
+    removeQuestion: elem => {
+	let question = elem.parentNode;
+	let questions = quizz.DOM.getQuestions();
+	let container = quizz.DOM.container;
+	let containerWidth = quizz.DOM.getWidthStyleAttr(container);
+
+	question.parentNode.removeChild(question);
+	if (containerWidth)
+	    container.style.width = (containerWidth - 100) + '%';
+	quizz.maxQuestion--;
+	quizz.previousQuestion();
+	quizz.refreshEvents();
+	
+	console.log("removed");
+    },
+    
     nextQuestion: () => {
 	let newMarginLeft = parseInt(
 	    quizz.DOM.container
@@ -136,6 +172,29 @@ const quizz = {
 	quizz.DOM.container.style.marginLeft = newMarginLeft + "%";
 	quizz.currentQuestion--;
 	quizz.DOM.questionCounter.innerHTML = quizz.currentQuestion + ' / ' + quizz.maxQuestion;
+    },
+
+    getData: () => {
+	let questions = Array.from(quizz.DOM.getQuestions());
+	let name = quizz.DOM.title.value;
+	let state = "waiting";
+	let data = questions.map((elem, index) => {
+	    let question = elem.getElementsByTagName('input')[0].value;
+	    let image = elem.getElementsByTagName('input')[1].value;
+	    let propositions = Array.from(elem.getElementsByClassName('proposition-button'))
+		    .map(elem => {return elem.innerHTML;});
+	    
+	    let answer = Array.from(document.getElementsByClassName('proposition-button'))
+		    .reduce((pv, cv, i) => {
+			return (Array.from(cv.classList).indexOf('btn-success') != -1)
+			    ? pv + i
+			    : pv + 0;
+		    }, 0);
+
+	    return {question, image, propositions, answer};
+	});
+
+	return {name, quizz: data, state};
     }
 
 };

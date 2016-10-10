@@ -28,6 +28,7 @@ const quizz = {
 		return parseInt(marginLeftAttr.split(':')[1]);
 	    }
 	},
+
 	getWidthStyleAttr: node => {
 	    let widthAttr = (node.getAttribute('style') === null)
 		    ? false
@@ -38,9 +39,28 @@ const quizz = {
 	    } else {
 		return parseInt(widthAttr.split(':')[1]);
 	    }
+	},
+	
+	getInputValue: () => {
+	    let questions = Array.from(quizz.DOM.getQuestions());
+	    let values = questions.map((elem, index) => {
+		let question = elem.getElementsByTagName('input')[0].value;
+		let image = elem.getElementsByTagName('input')[1].value;
+		return {question, image};
+	    });
+	    return values;
+	},
+
+	setInputValues: values => {
+	    var questions = quizz.DOM.getQuestions();
+	    values.forEach((value, index) => {
+		questions[index].getElementsByTagName('input')[0].setAttribute('value', value.image);
+		questions[index].getElementsByTagName('input')[1].setAttribute('value', value.question);
+	    });
 	}
+	    
     },
-       
+
     maxQuestion : 1,
     
     currentQuestion: 1,
@@ -130,9 +150,12 @@ const quizz = {
     },
 
     addQuestion: () => {
+	let inputValues = quizz.DOM.getInputValue();
+	console.log(inputValues);
 	quizz.DOM.container.innerHTML+= '<div class="question"><button class="close-button" onclick="quizz.removeQuestion(this)">x</button><input type="text" placeholder="Question" class="col-xs-12"><input type="text" placeholder="Image URL" class="col-xs-12"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="col-xs-12 proposition"></div><div class="col-xs-2"><button class="btn add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
 	quizz.DOM.container.style.width =  Array.from(document.getElementsByClassName('question')).length*100 +"%";
 	quizz.refreshEvents();
+	quizz.DOM.setInputValues(inputValues);
     },
 
     removeQuestion: elem => {

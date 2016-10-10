@@ -1,5 +1,3 @@
-// PB : Creating a new question erase the other questions data
-
 const quizz = {    
     helpers: {
     },
@@ -210,14 +208,15 @@ const quizz = {
 		    .map(elem => {return elem.innerHTML;});
 	    
 	    let answer = Array.from(document.getElementsByClassName('proposition-button'))
-		    .reduce((pv, cv, i) => {
-			return (Array.from(cv.classList).indexOf('btn-success') != -1)
-			    ? pv + i
-			    : pv + 0;
-		    }, 0);
+		    .map((elem, i) => {
+			return (Array.from(elem.classList).indexOf('btn-success') != -1)
+			    ? i
+			    : 0;
+		    }, 0)
+		    .reduce((pv, cv) => pv + cv);
 
 	    return {question, image, propositions, answer};
-	});
+	}); 
 
 	return {name, quizz: data, state};
     }

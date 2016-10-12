@@ -238,6 +238,11 @@ input[type="text"] {
 }
 
 
+#validate {
+  margin-top: 20px;
+}
+
+
 /*
  * scrollbar for chrome
  */

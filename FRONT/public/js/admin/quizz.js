@@ -1,5 +1,22 @@
 const quizz = {    
     helpers: {
+	getXHR: () => {
+	    let xhr = null;
+	    if (window.XMLHttpRequest || window.ActiveXObject) {
+		if (window.ActiveXObject) {
+		    try {
+			xhr = new ActiveXObject("Msxml2.XMLHTTP");
+		    } catch(e) {
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		    }
+		} else
+		    xhr = new XMLHttpRequest();
+	    } else {
+		alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
+		return null;
+	    }
+	    return xhr;
+	}
     },
 
     DOM: {
@@ -12,6 +29,8 @@ const quizz = {
 	questionCounter: document.getElementById('question-counter'),
 
 	title: document.getElementById('quizz-name'),
+
+	validate: document.getElementById('validate'),
 	
 	getQuestions : () => document.getElementsByClassName('question'),
 	
@@ -65,14 +84,13 @@ const quizz = {
 
     refreshEvents: () => {
 	let buttons = document.getElementsByClassName('add');
-
+	let propositionButtons = document.getElementsByClassName('proposition-button');
+	
 	Array.from(buttons).forEach((elem, index) => {
 	    elem.dataset.index = index;
 	    elem.removeEventListener('click', quizz.addProposition);
 	    elem.addEventListener('click', quizz.addProposition);
 	});
-
-	let propositionButtons = document.getElementsByClassName('proposition-button');
 
 	Array.from(propositionButtons).forEach(elem => {
 	    elem.removeEventListener('click', quizz.validProposition);
@@ -99,11 +117,25 @@ const quizz = {
 	    } else if (Math.abs(containerML) === Math.abs((questions.length - 2)*100)) {
 		nextQuestionButton.innerHTML = '+';
 		quizz.nextQuestion();
-	    } else {
+	    } else
 		quizz.nextQuestion();
-	    }
+	};
+	
+	quizz.DOM.validate.onclick = () => {
+	    let data = quizz.getData();
+	    let xhr = quizz.helpers.getXHR();
+	    console.log(data);
+	    console.log(API.url + '/quizz/add');
+	    xhr.onreadystatechange = () => {
+		if (xhr.readyState == 4 ) {
+		    console.log(xhr.responseText); //todo
+		}
+	    };
 	    
-	    
+	    xhr.open("POST", API.url + '/quizz/add');
+	    xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
+	    xhr.setRequestHeader('x-access-token', localStorage.getItem('token'));
+	    xhr.send(JSON.stringify(data));
 	};
     },
 
@@ -207,7 +239,8 @@ const quizz = {
 	    let propositions = Array.from(elem.getElementsByClassName('proposition-button'))
 		    .map(elem => {return elem.innerHTML;});
 	    
-	    let answer = Array.from(document.getElementsByClassName('proposition-button'))
+	    let answer = Array.from(document.getElementsByClassName('question')[index]
+				    .getElementsByClassName('proposition-button'))
 		    .map((elem, i) => {
 			return (Array.from(elem.classList).indexOf('btn-success') != -1)
 			    ? i

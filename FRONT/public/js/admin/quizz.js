@@ -1,40 +1,15 @@
-const quizz = {    
-    helpers: {
-	getXHR: () => {
-	    let xhr = null;
-	    if (window.XMLHttpRequest || window.ActiveXObject) {
-		if (window.ActiveXObject) {
-		    try {
-			xhr = new ActiveXObject("Msxml2.XMLHTTP");
-		    } catch(e) {
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		    }
-		} else
-		    xhr = new XMLHttpRequest();
-	    } else {
-		alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
-		return null;
-	    }
-	    return xhr;
-	}
-    },
+const quizz = {
+    display	    : true,
+    DOM		    : {
+	container	 :	document.getElementById('tmp-question'),
+	nextQuestion	 :	document.getElementById('next-question'),
+	previousQuestion :	document.getElementById('previous-question'),
+	questionCounter	 :	document.getElementById('question-counter'),
+	title		 :	document.getElementById('quizz-name'),
+	validate	 :	document.getElementById('validate'),
 
-    DOM: {
-	container: document.getElementById('tmp-question'),
-
-	nextQuestion: document.getElementById('next-question'),
-
-	previousQuestion: document.getElementById('previous-question'),
-
-	questionCounter: document.getElementById('question-counter'),
-
-	title: document.getElementById('quizz-name'),
-
-	validate: document.getElementById('validate'),
-	
-	getQuestions : () => document.getElementsByClassName('question'),
-	
-	getMarginLeftStyleAttr : node => {
+	getQuestions		: ()		=> document.getElementsByClassName('question'),
+	getMarginLeftStyleAttr	: node		=> {
 	    let marginLeftAttr = (node.getAttribute('style') === null)
 		    ? false
 		    : node.getAttribute('style').match(/margin\-left.*([0-9]*)/g)[0];
@@ -45,8 +20,7 @@ const quizz = {
 		return parseInt(marginLeftAttr.split(':')[1]);
 	    }
 	},
-
-	getWidthStyleAttr: node => {
+	getWidthStyleAttr	: node		=> {
 	    let widthAttr = (node.getAttribute('style') === null)
 		    ? false
 		    : node.getAttribute('style').match(/width.*([0-9]*)/g)[0];
@@ -57,8 +31,7 @@ const quizz = {
 		return parseInt(widthAttr.split(':')[1]);
 	    }
 	},
-	
-	getInputValue: () => {
+	getInputValue		: ()		=> {
 	    let questions = Array.from(quizz.DOM.getQuestions());
 	    let values = questions.map((elem, index) => {
 		let question = elem.getElementsByTagName('input')[0].value;
@@ -67,22 +40,18 @@ const quizz = {
 	    });
 	    return values;
 	},
-
-	setInputValues: values => {
+	setInputValues		: values	=> {
 	    var questions = quizz.DOM.getQuestions();
 	    values.forEach((value, index) => {
 		questions[index].getElementsByTagName('input')[0].setAttribute('value', value.image);
 		questions[index].getElementsByTagName('input')[1].setAttribute('value', value.question);
 	    });
 	}
-	    
     },
+    maxQuestion     : 1,    
+    currentQuestion : 1,
 
-    maxQuestion : 1,
-    
-    currentQuestion: 1,
-
-    refreshEvents: () => {
+    refreshEvents	: ()	=> {
 	let buttons = document.getElementsByClassName('add');
 	let propositionButtons = document.getElementsByClassName('proposition-button');
 	
@@ -123,7 +92,7 @@ const quizz = {
 	
 	quizz.DOM.validate.onclick = () => {
 	    let data = quizz.getData();
-	    let xhr = quizz.helpers.getXHR();
+	    let xhr = helpers.getXHR();
 	    console.log(data);
 	    console.log(API.url + '/quizz/add');
 	    xhr.onreadystatechange = () => {
@@ -138,8 +107,7 @@ const quizz = {
 	    xhr.send(JSON.stringify(data));
 	};
     },
-
-    addProposition: event => {
+    addProposition	: event => {
 	let button = event.target;
 	let index = button.dataset.index;
 	let proposition = document.getElementsByClassName('proposition')[index].value;
@@ -154,8 +122,7 @@ const quizz = {
 	    elem.addEventListener('click', quizz.validProposition);
 	});
     },
-
-    validProposition: event => {
+    validProposition	: event => {
 	let button = event.target;
 	let index = button.dataset.index;
 	let pageIndex = button.parentNode.parentNode.parentNode.getElementsByClassName('add')[0].dataset.index;
@@ -169,8 +136,7 @@ const quizz = {
 		    : 'btn btn-secondary proposition-button';
 	    });
     },
-
-    removeProposition: elem => {
+    removeProposition	: elem	=> {
 	let allButtons = elem.parentNode.parentNode.getElementsByClassName('proposition-button');
 	elem.parentNode.parentNode.removeChild(elem.parentNode);
 
@@ -178,8 +144,7 @@ const quizz = {
 	    elem.dataset.index = index;
 	});
     },
-
-    addQuestion: () => {
+    addQuestion		: ()	=> {
 	let inputValues = quizz.DOM.getInputValue();
 	console.log(inputValues);
 	quizz.DOM.container.innerHTML+= '<div class="question"><button class="close-button" onclick="quizz.removeQuestion(this)">x</button><input type="text" placeholder="Question" class="col-xs-12"><input type="text" placeholder="Image URL" class="col-xs-12"><div class="image col-xs-12"></div><div class="row proposition-container"><div class="col-xs-10"><input type="text" placeholder="proposition" class="col-xs-12 proposition"></div><div class="col-xs-2"><button class="btn add" data-index="0">add</button></div><div class="col-xs-12 proposition-list"></div></div></div>';
@@ -187,8 +152,7 @@ const quizz = {
 	quizz.refreshEvents();
 	quizz.DOM.setInputValues(inputValues);
     },
-
-    removeQuestion: elem => {
+    removeQuestion	: elem	=> {
 	let question = elem.parentNode;
 	let questions = quizz.DOM.getQuestions();
 	let container = quizz.DOM.container;
@@ -203,8 +167,7 @@ const quizz = {
 	
 	console.log("removed");
     },
-    
-    nextQuestion: () => {
+    nextQuestion	: ()	=> {
 	let newMarginLeft = parseInt(
 	    quizz.DOM.container
 		.getAttribute('style')
@@ -216,8 +179,7 @@ const quizz = {
 	quizz.currentQuestion++;
 	quizz.DOM.questionCounter.innerHTML = quizz.currentQuestion + ' / ' + quizz.maxQuestion;
     },
-
-    previousQuestion: () => {
+    previousQuestion	: ()	=> {
 	let newMarginLeft = parseInt(
 	    quizz.DOM.container
 		.getAttribute('style')
@@ -228,8 +190,7 @@ const quizz = {
 	quizz.currentQuestion--;
 	quizz.DOM.questionCounter.innerHTML = quizz.currentQuestion + ' / ' + quizz.maxQuestion;
     },
-
-    getData: () => {
+    getData		: ()	=> {
 	let questions = Array.from(quizz.DOM.getQuestions());
 	let name = quizz.DOM.title.value;
 	let state = "waiting";
@@ -259,26 +220,102 @@ const quizz = {
 window.addEventListener('DOMContentLoaded', event => {
     console.log("loaded");
     quizz.refreshEvents();
-//    getAllQuizzs();
+    navigation.handleEvents();
+    quizzList.getAllQuizzs(allQuizz => {quizzList.displayAllQuizz(allQuizz.quizzs);});
 });
 
 
-/*
+const quizzList = {
+    DOM: {
+	container	:  document.getElementById('list-quizz'),
+	listContainer	:  document.getElementById('list-quizz-ul')
+    },
 
-function getAllQuizzs() {
-    var token		= localStorage.getItem('token');
-    var container	= document.getElementById('display');
-    var xhr		= getXHR();
+    getAllQuizzs: callback => {
+	let token = localStorage.getItem('token');
+	let xhr	= helpers.getXHR();
 
-    xhr.onreadystatechange = function() {
-	if (xhr.readyState == 4 ) {
-	    container.innerHTML+= xhr.responseText;
+	xhr.onreadystatechange = () => {
+	    if (xhr.readyState == 4 )
+		callback(JSON.parse(xhr.responseText));
+	};
+
+	xhr.open("GET", API.url+'/quizz');
+	xhr.setRequestHeader('x-access-token', token);
+	xhr.send();
+    },
+
+    displayAllQuizz: allQuizz => {
+	let container = quizzList.DOM.listContainer;
+	container.innerHTML = allQuizz.map((elem, i, arr) => {
+	    return '<li class="quizzList-item col-xs-12"><div class="row"><div class="col-xs-6 quizzList-item-name"> '+ elem.name +' </div><div class="col-xs-3 quizzList-item-state"> '+ elem.state +' </div><div class="col-xs-3 quizzList-item-questionsNumber"> '+ elem.quizz.length +' </div></div></li>';
+	}).join("");
+    }
+};
+
+
+const navigation = {
+    DOM: {
+	addQuizzButton: document.getElementsByClassName('add-quizz')[0],
+	showQuizzButton: document.getElementsByClassName('show-quizz')[0],
+	waitingQuizz: document.getElementsByClassName('waiting')[0],
+	todoQuizz: document.getElementsByClassName('todo')[0],
+	doneQuizz: document.getElementsByClassName('done')[0],
+	QuizzContainer: document.getElementById('add-quizz'),
+	QuizzListContainer: document.getElementById('list-quizz'),
+	QuizzListUl: document.getElementById('list-quizz-ul')
+    },
+    helpers: {
+	displayByState: state => {
+	    let nodeList = document.getElementsByClassName('quizzList-item-state');
+	    return Array.from(nodeList)
+		.forEach((elem, i) => elem.parentNode.parentNode.style.display = (elem.innerHTML.includes(state)) ? "block" : "none" );
 	}
-    };
-    
-    xhr.open("GET", API.url+'/quizz');
-    xhr.setRequestHeader('x-access-token', token);
-    xhr.send();
-}
+    },
+    addQuizz: () => {
+	navigation.DOM.QuizzContainer.style.display = "block";
+	navigation.DOM.QuizzListContainer.style.display = "none";
+	navigation.DOM.addQuizzButton.style.background = "#4b6673";
+	navigation.DOM.showQuizzButton.style.background = "#273238";
+    },
+    showQuizz: () => {
+	navigation.DOM.QuizzContainer.style.display = "none";
+	navigation.DOM.QuizzListContainer.style.display = "block";
+	navigation.DOM.addQuizzButton.style.background = "#273238";
+	navigation.DOM.showQuizzButton.style.background = "#4b6673";
+    },
+    waitingQuizz: () => navigation.helpers.displayByState('waiting'),
+    todoQuizz: () => navigation.helpers.displayByState('todo'),
+    doneQuizz: () => navigation.helpers.displayByState('done'),
 
-*/
+    handleEvents: () => {
+	navigation.DOM.addQuizzButton.onclick = () => navigation.addQuizz();
+	navigation.DOM.showQuizzButton.onclick = () => navigation.showQuizz();
+
+	navigation.DOM.waitingQuizz.onclick = () => navigation.waitingQuizz();
+	navigation.DOM.todoQuizz.onclick = () => navigation.todoQuizz();
+	navigation.DOM.doneQuizz.onclick = () => navigation.doneQuizz();
+
+    }
+};
+
+
+const helpers = {
+    getXHR : () => {
+	let xhr = null;
+	if (window.XMLHttpRequest || window.ActiveXObject) {
+	    if (window.ActiveXObject) {
+		try {
+		    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch(e) {
+		    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	    } else
+		xhr = new XMLHttpRequest();
+	} else {
+	    alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
+	    return null;
+	}
+	return xhr;
+    }
+};

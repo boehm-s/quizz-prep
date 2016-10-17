@@ -10,14 +10,17 @@ block body
       form.form-inline.pull-xs-right
         input.form-control(type='text', placeholder='Rechercher')
       ul
-       li.add-quizz.navbar-item
+        li.add-quizz.navbar-item
           p Add Quizz !
-       li.waiting.navbar-item
-          p Waiting Quizzs ...
-       li.todo.navbar-item
-          p Todo Quizzs
-       li.done.navbar-item
-          p Done Quizzs
+        li.show-quizz.navbar-item
+          p Show Quizz
+          ul
+            li.waiting.navbar-item
+              p Waiting Quizzs ...
+            li.todo.navbar-item
+              p Todo Quizzs
+            li.done.navbar-item
+              p Done Quizzs
     section#display.col-xs-10
       header.row
         h1.col-xs-12= title
@@ -41,5 +44,14 @@ block body
         #next-question.col-xs-1 +
         #question-counter 1 / 1
         button#validate.btn.btn-info.col-xs-12 Valider
+      section#list-quizz.row
+        .col-xs-12
+          ul#list-quizz-titles.row
+            li.col-xs-12
+              .row
+                .col-xs-6.name Name
+                .col-xs-3.state State
+                .col-xs-3.length Question number
+          ul#list-quizz-ul.row
 block scripts
   script(src='/js/admin/quizz.js')

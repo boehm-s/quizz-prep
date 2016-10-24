@@ -24,7 +24,7 @@ block body
     section#display.col-xs-10
       header.row
         h1.col-xs-12= title
-      section#add-quizz.row
+      section#add-quizz.row.tmp-question
         input#quizz-name.col-xs-12(type='text', placeholder='Quizz Name')
         .col-xs-12
           h3 Questions : 
@@ -49,9 +49,10 @@ block body
           ul#list-quizz-titles.row
             li.col-xs-12
               .row
-                .col-xs-6.name Name
+                .col-xs-4.name Name
                 .col-xs-3.state State
                 .col-xs-3.length Question number
+                .col-xs-2.edit Edit
           ul#list-quizz-ul.row
 block scripts
   script(src='/js/admin/quizz.js')

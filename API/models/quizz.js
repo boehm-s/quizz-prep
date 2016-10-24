@@ -15,7 +15,8 @@ const QuestionSchema = new Schema({
 const QuizzSchema = new Schema({
     name: {
 	type: String,
-	required: true
+	required: true,
+	unique: true
     },
     quizz: [QuestionSchema],
     state: String

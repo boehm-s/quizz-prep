@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
   res.render('admin/index', { title: 'Connexion' });
 });
 
-router.get('/add-quizz', function(req, res, next) {
+router.get('/quizz', function(req, res, next) {
   res.render('admin/quizz', { title: 'Quizz Management' });
 });
 

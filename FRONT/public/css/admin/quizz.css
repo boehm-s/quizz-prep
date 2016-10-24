@@ -352,7 +352,7 @@ input[type="text"] {
 
 .quizzList-item {
   height: 50px;
-  line-height: 50px;
+  line-height: 48px;
   text-align: center;
   font-size: 20px;
   margin-top: 20px;
@@ -367,4 +367,36 @@ input[type="text"] {
 }
 
 .quizzList-item:nth-child(odd) {
+}
+
+
+.quizzList-item-edit, .quizzList-item-state {
+  padding: 0;
+}
+
+.delete {
+  height: 100%;
+  float: right;
+  width: 60px;
+  transition: 0.4s;
+}
+.delete:hover {
+  background: #f39b9b;
+}
+
+.quizzList-item-state, .quizzList-item-edit {
+  cursor: pointer;
+  transition: 0.4s;
+}
+.quizzList-item-state:hover, .quizzList-item-edit:hover {
+  background: #d5f3f0;
+}
+
+
+#tmpSelectState {
+  width: 100%;
+  height: 47px;
+  background: #d5f3f0;
+  border: none;
+  text-align-last: center;
 }

@@ -27,17 +27,22 @@ router.route('/done').get(
     quizzCtrl.getByState
 );
 
+router.route('/getByName').get(
+    connectionCtrl.isAdmin,
+    quizzCtrl.getByName
+);
+
 router.route('/add').post(
     connectionCtrl.isAdmin,
     quizzCtrl.add
 );
 
-router.route('/update').post(
+router.route('/setState').post(
     connectionCtrl.isAdmin,
-    quizzCtrl.update
+    quizzCtrl.setState
 );
 
-router.route('/delete').post(
+router.route('/remove').post(
     connectionCtrl.isAdmin,
     quizzCtrl.remove
 );

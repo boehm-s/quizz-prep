@@ -1,6 +1,7 @@
 const quizz = {
     display	    : true,
     DOM		    : {
+	bigContainer	 :	document.getElementById('add-quizz'),
 	container	 :	document.getElementById('tmp-question'),
 	nextQuestion	 :	document.getElementById('next-question'),
 	previousQuestion :	document.getElementById('previous-question'),
@@ -221,17 +222,22 @@ window.addEventListener('DOMContentLoaded', event => {
     console.log("loaded");
     quizz.refreshEvents();
     navigation.handleEvents();
-    quizzList.getAllQuizzs(allQuizz => {quizzList.displayAllQuizz(allQuizz.quizzs);});
+    quizzList.getAllQuizzs(allQuizz => {quizzList.displayAllQuizz(allQuizz.quizzs); quizzList.handleEvents();});
 });
 
 
 const quizzList = {
     DOM: {
-	container	:  document.getElementById('list-quizz'),
-	listContainer	:  document.getElementById('list-quizz-ul')
-    },
+	container	 :  document.getElementById('list-quizz'),
+	listContainer	 :  document.getElementById('list-quizz-ul'),
 
-    getAllQuizzs: callback => {
+	getStateList	 :  () => document.getElementsByClassName('quizzList-item-state'),
+
+	getDelButtonList :  () => document.getElementsByClassName('delete'),
+	
+	getEditButtonList:  () => document.getElementsByClassName('quizzList-item-edit')
+    },
+    getAllQuizzs	: callback	=> {
 	let token = localStorage.getItem('token');
 	let xhr	= helpers.getXHR();
 
@@ -244,18 +250,122 @@ const quizzList = {
 	xhr.setRequestHeader('x-access-token', token);
 	xhr.send();
     },
-
-    displayAllQuizz: allQuizz => {
+    displayAllQuizz	: allQuizz	=> {
 	let container = quizzList.DOM.listContainer;
 	container.innerHTML = allQuizz.map((elem, i, arr) => {
-	    return '<li class="quizzList-item col-xs-12"><div class="row"><div class="col-xs-6 quizzList-item-name"> '+ elem.name +' </div><div class="col-xs-3 quizzList-item-state"> '+ elem.state +' </div><div class="col-xs-3 quizzList-item-questionsNumber"> '+ elem.quizz.length +' </div></div></li>';
+	    return '<li class="quizzList-item col-xs-12"><div class="row"><div class="col-xs-4 quizzList-item-name"> '+ elem.name +' </div><div class="col-xs-3 quizzList-item-state"> '+ elem.state +' </div><div class="col-xs-3 quizzList-item-questionsNumber"> '+ elem.quizz.length +' </div><div class="col-xs-2 quizzList-item-edit"> Edit <span class="delete">X</span></div></div></li>';
 	}).join("");
+    },
+    changeState		: node		=> {
+	node.innerHTML = '<select id="tmpSelectState"> <option value="todo"> Todo </option>   <option value="waiting"> Waiting </option>   <option value="done"> done </option></select>';
+	let select = document.getElementById('tmpSelectState');
+	let xhr = helpers.getXHR();
+	
+	select.oninput = e => {
+	    let self = e.target;
+	    let name = self.parentNode.parentNode.getElementsByClassName('quizzList-item-name')[0].innerHTML.trim();
+	    let state = self.value;
+
+	    xhr.onreadystatechange = () => {
+		if (xhr.readyState == 4 ) {
+		    console.log(xhr.responseText); //todo
+		}
+	    };
+
+	    xhr.open("POST", API.url+'/quizz/setState');
+	    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	    xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
+	    xhr.send("name="+ name +"&state=" + state);
+
+	    node.innerHTML = select.value;
+	};
+    },
+    removeQuizz		: node		=> {
+	let container = node.parentNode.parentNode.parentNode;
+	let quizzName = container.getElementsByClassName('quizzList-item-name')[0].innerHTML.trim();
+
+	let xhr = helpers.getXHR();
+	xhr.onreadystatechange = () => {
+	    if (xhr.readyState == 4 ) {
+		console.log(xhr.responseText); //todo
+		container.parentNode.removeChild(container);
+	    }
+	};
+
+	xhr.open("POST", API.url+'/quizz/remove');
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
+	xhr.send("name="+ quizzName);
+    },
+    editQuizz		: node		=> {
+	let container = node.parentNode.parentNode;
+	let quizzName = container.getElementsByClassName('quizzList-item-name')[0].innerHTML.trim();
+	let xhr = helpers.getXHR();
+	xhr.onreadystatechange = () => {
+	    if (xhr.readyState == 4 ) {
+		let res = JSON.parse(xhr.responseText).quizz;
+		console.log(res);
+		quizzList.DOM.container.style.display = "none";
+		quizz.DOM.bigContainer.style.display = "block";
+		navigation.DOM.addQuizzButton.setAttribute("style", "background: rgb(75, 102, 115);");
+		navigation.DOM.showQuizzButton.setAttribute("style", "background: rgb(39, 50, 56);");
+
+		quizz.DOM.title.value = res.name;
+		
+		res.quizz.forEach((quest, i) => {
+		    let questionDOM = quizz.DOM.container.childNodes[i];
+		    let inputs = questionDOM.getElementsByTagName('input');
+		    inputs[1].value = quest.question;
+		    inputs[0].value = quest.image;
+		    quest.propositions.forEach((proposition, j) => {
+			let propositionList = document.getElementsByClassName('proposition-list')[i];
+			propositionList.innerHTML+= (j === quest.answer)
+			    ? '<div class="col-xs-5"><button class="btn btn-success proposition-button">' + proposition + '</button><button class="col-xs-1 btn btn-danger" onclick="quizz.removeProposition(this)">X</button></div>'
+			    : '<div class="col-xs-5"><button class="btn btn-secondary proposition-button">' + proposition + '</button><button class="col-xs-1 btn btn-danger" onclick="quizz.removeProposition(this)">X</button></div>';
+			let propositionButtons = document.getElementsByClassName('question')[i].getElementsByClassName('proposition-button');
+
+			Array.from(propositionButtons).forEach((elem, index) => {
+			    elem.dataset.index = index; 
+			    elem.removeEventListener('click', quizz.validProposition);
+			    elem.addEventListener('click', quizz.validProposition);
+			});
+		    });
+		    if (res.quizz[i+1]) {
+			quizz.addQuestion();
+			quizz.DOM.nextQuestion.innerHTML = '+';
+			quizz.nextQuestion();
+		    }
+		});
+	    }
+	};
+
+	xhr.open("GET", API.url+'/quizz/getByName?name='+quizzName);
+	xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
+	xhr.send();
+    },
+    
+    handleEvents	: () => {
+	let states = quizzList.DOM.getStateList();
+	Array.from(states).forEach((elem, i) => {
+	    elem.onclick = () => {quizzList.changeState(elem);};
+	});
+
+	let dels = quizzList.DOM.getDelButtonList();
+	Array.from(dels).forEach((elem, i) => {
+	    elem.onclick = () => {quizzList.removeQuizz(elem);};
+	});
+
+	let edits = quizzList.DOM.getEditButtonList();
+	Array.from(edits).forEach((elem, i) => {
+	    elem.onclick = () => {quizzList.editQuizz(elem);};
+	});
+
     }
 };
 
 
 const navigation = {
-    DOM: {
+    DOM		: {
 	addQuizzButton: document.getElementsByClassName('add-quizz')[0],
 	showQuizzButton: document.getElementsByClassName('show-quizz')[0],
 	waitingQuizz: document.getElementsByClassName('waiting')[0],
@@ -265,29 +375,28 @@ const navigation = {
 	QuizzListContainer: document.getElementById('list-quizz'),
 	QuizzListUl: document.getElementById('list-quizz-ul')
     },
-    helpers: {
+    helpers	: {
 	displayByState: state => {
 	    let nodeList = document.getElementsByClassName('quizzList-item-state');
 	    return Array.from(nodeList)
 		.forEach((elem, i) => elem.parentNode.parentNode.style.display = (elem.innerHTML.includes(state)) ? "block" : "none" );
 	}
     },
-    addQuizz: () => {
+    addQuizz	: () => {
 	navigation.DOM.QuizzContainer.style.display = "block";
 	navigation.DOM.QuizzListContainer.style.display = "none";
 	navigation.DOM.addQuizzButton.style.background = "#4b6673";
 	navigation.DOM.showQuizzButton.style.background = "#273238";
     },
-    showQuizz: () => {
+    showQuizz	: () => {
 	navigation.DOM.QuizzContainer.style.display = "none";
 	navigation.DOM.QuizzListContainer.style.display = "block";
 	navigation.DOM.addQuizzButton.style.background = "#273238";
 	navigation.DOM.showQuizzButton.style.background = "#4b6673";
     },
     waitingQuizz: () => navigation.helpers.displayByState('waiting'),
-    todoQuizz: () => navigation.helpers.displayByState('todo'),
-    doneQuizz: () => navigation.helpers.displayByState('done'),
-
+    todoQuizz	: () => navigation.helpers.displayByState('todo'),
+    doneQuizz	: () => navigation.helpers.displayByState('done'),
     handleEvents: () => {
 	navigation.DOM.addQuizzButton.onclick = () => navigation.addQuizz();
 	navigation.DOM.showQuizzButton.onclick = () => navigation.showQuizz();

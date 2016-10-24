@@ -20,28 +20,26 @@ function add(req, res, next) {
     });
 }
 
-function update(req, res, next) {
-    Quizz.findOne({name: req.body.quizzName}, (err, quizz) => {
-	quizz = JSON.parse(req.body.quizz);
-	quizz.save(err => {
-	    if (err) {
-		res.status(418).json({
-		    success: false, 
-		    error: err, 
-		    message: "Don't foute you de ma gueule"
-		});
-	    } else {
-		res.json({ 
-		    success: true, 
-		    message: 'Quizz successfuly updated !'
-		});
-	    }
-	});
+function setState(req, res, next) {
+    Quizz.update({name: req.body.name}, {state: req.body.state}, (err, numAffected) => {
+	if (err) {
+	    res.status(418).json({
+		success: false, 
+		error: err, 
+		message: "Don't foute you de ma gueule"});
+	} else {
+	    res.json({ 
+		success: true,
+		message: 'State successfuly updated !',
+		numAffected
+	    });
+	}
     });
 }
 
+
 function remove(req, res, next) {
-    Quizz.findOne({name: req.body.quizzName}).remove(err => {
+    Quizz.findOne({name: req.body.name}).remove(err => {
 	if (err) {
 	    res.status(418).json({
 		success: false, 
@@ -93,4 +91,24 @@ function getByState(req, res, next) {
     });
 }
 
-export default {add, update, remove, getAll, getByState};
+
+function getByName(req, res, next) {
+    const name = req.name || req.query.name;
+    Quizz.findOne({name: name}, (err, quizz) => {
+	if (err) {
+	    res.status(418).json({
+		success: false, 
+		error: err, 
+		message: "Don't foute you de ma gueule"
+	    });
+	} else {
+	    res.json({
+		success: true, 
+		message: "Here is your quizz !", 
+		quizz: quizz
+	    });
+	}
+    });
+}
+
+export default {add, setState, remove, getAll, getByState, getByName};

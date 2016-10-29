@@ -2,22 +2,27 @@ import Quizz from '../models/quizz';
 import app from '../../config/express';
 
 function add(req, res, next) {
-    console.log(req.body);
     const quizz = new Quizz(JSON.parse(JSON.stringify(req.body)));
 
-    quizz.save(err => {
-	if (err) {
-	    res.status(418).json({
-		success: false, 
-		error: err, 
-		message: "Don't foute you de ma gueule"});
-	} else {
-	    res.json({ 
-		success: true, 
-		message: 'Quizz successfuly saved !'
-	    });
+    Quizz.findOne({name: quizz.name}, (err, resQuizz) => {
+	if (err && err.code !== 11000)
+	    res.status(418).json({ success: false, error: err, message: "Don't foute you de ma gueule"});
+	else {
+	    if (resQuizz) {
+		for (var i in req.body)
+		    resQuizz[i] = req.body[i];
+		resQuizz.save(err => (err)
+			      ? res.status(418).json({ success: false, error: err, message: "Don't foute you de ma gueule"})
+			      : res.json({ success: true, message: 'Quizz successfuly updated !'})
+			     );
+	    } else {
+		quizz.save(err => (err)
+			   ? res.status(418).json({ success: false, error: err, message: "Don't foute you de ma gueule"})
+			   : res.json({ success: true, message: 'Quizz successfuly saved !'})
+			  );
+	    }
 	}
-    });
+    });    
 }
 
 function setState(req, res, next) {
